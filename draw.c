@@ -56,7 +56,8 @@ void add_sphere( struct matrix * edges,
   struct matrix *tmp = generate_sphere(cx,cy,cz,r,step);
   int ctr;
   for( ctr = 0; ctr < tmp->lastcol; ctr+=2){
-  
+    add_edge(edges,tmp->m[ctr][0],tmp->m[ctr][1],tmp->m[ctr][2],tmp->m[ctr+1][0],tmp->m[ctr+1][1],tmp->m[ctr+1][2]);
+  }
 }
 
 /*======== void generate_sphere() ==========
@@ -122,6 +123,8 @@ void add_torus( struct matrix * edges,
   ====================*/
 struct matrix * generate_torus( double cx, double cy, double cz,
 				double r1, double r2, double step ) {
+  struct matrix * torus = new_matrix(4,4);
+  
   return NULL;
 }
 
