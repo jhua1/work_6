@@ -210,6 +210,16 @@ void parse_file ( char * filename,
       save_extension(s, line);
     }//end save
     
+    else if ( strncmp(line, "clear", strlen(line)) == 0) 
+      edges = new_matrix(4,4);
+    
+    else if ( strncmp(line, "box", strlen(line)) == ){
+      fgets(line,sizeof(line), f);
+      sscanf(line,"%lf %lf %lf %lf %lf %lf",xvals,yvals,zvals,xvals+1,yvals+1,zvals+1);
+      add_box( edges,xvals[0],yvals[0],zvals[0],xvals[1],yvals[1],zvals[1]);
+
+      
+      
   }
 }
   
