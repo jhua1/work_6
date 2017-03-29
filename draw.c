@@ -10,12 +10,12 @@
 
 /*======== void add_box() ==========
   Inputs:   struct matrix * edges
-            double x
-	    double y
-	    double z
-	    double width
-	    double height
-	    double depth
+  double x
+  double y
+  double z
+  double width
+  double height
+  double depth
   Returns: 
 
   add the points for a rectagular prism whose 
@@ -26,22 +26,22 @@ void add_box( struct matrix * edges,
 	      double x, double y, double z,
 	      double width, double height, double depth ) {
   add_edge(edges,x,y,z,x,y,z);
-  add_edge(edges,x,y-h,z,x,y-h,z);
-  add_edge(edges,x+w,y,z,x+w,y,z);
-  add_edge(edges,x+w,y-h,z,x+w,y-h,z);
-  add_edge(edges,x,y,z-d,x,y,z-d);
-  add_edge(edges,x,y-h,z-d,x,y-h,z-d);
-  add_edge(edges,x+w,y-h,z-d,x+w,y-h,z-d);
-  add_edge(edges,x+w,y,z-d,x+w,y,z-d);
+  add_edge(edges,x,y-height,z,x,y-height,z);
+  add_edge(edges,x+width,y,z,x+width,y,z);
+  add_edge(edges,x+width,y-height,z,x+width,y-height,z);
+  add_edge(edges,x,y,z-depth,x,y,z-depth);
+  add_edge(edges,x,y-height,z-depth,x,y-height,z-depth);
+  add_edge(edges,x+width,y-height,z-depth,x+width,y-height,z-depth);
+  add_edge(edges,x+width,y,z-depth,x+width,y,z-depth);
 }
 
 /*======== void add_sphere() ==========
   Inputs:   struct matrix * points
-            double cx
-	    double cy
-	    double cz
-	    double r
-	    double step  
+  double cx
+  double cy
+  double cz
+  double r
+  double step  
   Returns: 
 
   adds all the points for a sphere with center 
@@ -55,22 +55,23 @@ void add_sphere( struct matrix * edges,
 		 double r, double step ) {
   struct matrix *tmp = generate_sphere(cx,cy,cz,r,step);
   int ctr;
-  for( ctr = 0; ctr < tmp->lastcol; ctr+=2){
-    add_edge(edges,tmp->m[ctr][0],tmp->m[ctr][1],tmp->m[ctr][2],tmp->m[ctr+1][0],tmp->m[ctr+1][1],tmp->m[ctr+1][2]);
+  for( ctr = 0; ctr < tmp->lastcol; ctr++){
+    add_edge(edges,tmp->m[ctr][0],tmp->m[ctr][1],tmp->m[ctr][2],
+	     tmp->m[ctr][0],tmp->m[ctr][1],tmp->m[ctr][2]);
   }
 }
 
 /*======== void generate_sphere() ==========
   Inputs:   struct matrix * points
-            double cx
-	    double cy
-	    double cz
-	    double r
-	    double step  
+  double cx
+  double cy
+  double cz
+  double r
+  double step  
   Returns: Generates all the points along the surface 
-           of a sphere with center (cx, cy, cz) and
-	   radius r.
-	   Returns a matrix of those points
+  of a sphere with center (cx, cy, cz) and
+  radius r.
+  Returns a matrix of those points
   ====================*/
 struct matrix * generate_sphere(double cx, double cy, double cz,
 				double r, double step ) {
@@ -78,23 +79,23 @@ struct matrix * generate_sphere(double cx, double cy, double cz,
   float ctr1, ctr2,x,y,z;
   for( ctr1 = 0; ctr1 < 1.000001; ctr1+=step){
     for( ctr2 = 0; ctr2 < 1.000001; ctr2+=step){
-      x = r*cos(MATH_PI * ctr2) + cx;
-      y = r*sin(MATH_PI * ctr2)*cos(2*MATH_PI * ctr1) + cy;
-      z = r*sin(MATH_PI * ctr2)*sin(2*MATH_PI * ctr1) + cz;
+      x = r*cos(M_PI * ctr2) + cx;
+      y = r*sin(M_PI * ctr2)*cos(2*M_PI * ctr1) + cy;
+      z = r*sin(M_PI * ctr2)*sin(2*M_PI * ctr1) + cz;
+      add_point(sphere,x,y,z);
     }
   }
-  add_edge(sphere,x,y,z,x,y,z);
   return sphere;
 }
 
 /*======== void add_torus() ==========
   Inputs:   struct matrix * points
-            double cx
-	    double cy
-	    double cz
-	    double r1
-	    double r2
-	    double step  
+  double cx
+  double cy
+  double cz
+  double r1
+  double r2
+  double step  
   Returns: 
 
   adds all the points required to make a torus
@@ -106,34 +107,46 @@ struct matrix * generate_sphere(double cx, double cy, double cz,
 void add_torus( struct matrix * edges, 
 		double cx, double cy, double cz,
 		double r1, double r2, double step ) {
-  return;
+  struct matrix *tmp = generate_torus(cx,cy,cz,r1,r2,step);
+  int ctr;
+  for( ctr = 0; ctr < tmp->lastcol; ctr+=2){
+    add_edge(edges,tmp->m[ctr][0],tmp->m[ctr][1],tmp->m[ctr][2],
+	     tmp->m[ctr+1][0],tmp->m[ctr+1][1],tmp->m[ctr+1][2]);
+  }
 }
-
 /*======== void generate_torus() ==========
   Inputs:   struct matrix * points
-            double cx
-	    double cy
-	    double cz
-	    double r
-	    double step  
+  double cx
+  double cy
+  double cz
+  double r
+  double step  
   Returns: Generates all the points along the surface 
-           of a torus with center (cx, cy, cz) and
-	   radii r1 and r2.
-	   Returns a matrix of those points
+  of a torus with center (cx, cy, cz) and
+  radii r1 and r2.
+  Returns a matrix of those points
   ====================*/
 struct matrix * generate_torus( double cx, double cy, double cz,
 				double r1, double r2, double step ) {
   struct matrix * torus = new_matrix(4,4);
-  
-  return NULL;
+  float ctr1, ctr2,x,y,z;
+  for( ctr1 = 0; ctr1 < 1.000001; ctr1+=step){
+    for( ctr2 = 0; ctr2 < 1.000001; ctr2+=step){
+      x = cos(2 * M_PI * ctr1) * (r1 * cos(2 * M_PI * ctr2) +r2) + cx;
+      y = r1*sin(2 * M_PI * ctr2) + cy;
+      z = -1*sin(2 * M_PI * ctr1) * (r1 * cos(2 * M_PI * ctr2) + r2) + cz;
+      add_edge(torus,x,y,z,x,y,z);
+    }
+  }
+  return torus;
 }
 
 /*======== void add_circle() ==========
   Inputs:   struct matrix * points
-            double cx
-	    double cy
-	    double r
-	    double step  
+  double cx
+  double cy
+  double r
+  double step  
   Returns: 
 
   Adds the circle at (cx, cy) with radius r to edges
@@ -158,23 +171,23 @@ void add_circle( struct matrix * edges,
 }
 
 /*======== void add_curve() ==========
-Inputs:   struct matrix *points
-         double x0
-         double y0
-         double x1
-         double y1
-         double x2
-         double y2
-         double x3
-         double y3
-         double step
-         int type  
-Returns: 
+  Inputs:   struct matrix *points
+  double x0
+  double y0
+  double x1
+  double y1
+  double x2
+  double y2
+  double x3
+  double y3
+  double step
+  int type  
+  Returns: 
 
-Adds the curve bounded by the 4 points passsed as parameters
-of type specified in type (see matrix.h for curve type constants)
-to the matrix points
-====================*/
+  Adds the curve bounded by the 4 points passsed as parameters
+  of type specified in type (see matrix.h for curve type constants)
+  to the matrix points
+  ====================*/
 void add_curve( struct matrix *edges, 
 		double x0, double y0, 
 		double x1, double y1, 
@@ -211,14 +224,14 @@ void add_curve( struct matrix *edges,
 
 
 /*======== void add_point() ==========
-Inputs:   struct matrix * points
-         int x
-         int y
-         int z 
-Returns: 
-adds point (x, y, z) to points and increment points.lastcol
-if points is full, should call grow on points
-====================*/
+  Inputs:   struct matrix * points
+  int x
+  int y
+  int z 
+  Returns: 
+  adds point (x, y, z) to points and increment points.lastcol
+  if points is full, should call grow on points
+  ====================*/
 void add_point( struct matrix * points, double x, double y, double z) {
 
   if ( points->lastcol == points->cols )
@@ -231,13 +244,13 @@ void add_point( struct matrix * points, double x, double y, double z) {
   points->lastcol++;
 } //end add_point
 
-/*======== void add_edge() ==========
-Inputs:   struct matrix * points
-          int x0, int y0, int z0, int x1, int y1, int z1
-Returns: 
-add the line connecting (x0, y0, z0) to (x1, y1, z1) to points
-should use add_point
-====================*/
+  /*======== void add_edge() ==========
+    Inputs:   struct matrix * points
+    int x0, int y0, int z0, int x1, int y1, int z1
+    Returns: 
+    add the line connecting (x0, y0, z0) to (x1, y1, z1) to points
+    should use add_point
+    ====================*/
 void add_edge( struct matrix * points, 
 	       double x0, double y0, double z0, 
 	       double x1, double y1, double z1) {
@@ -246,27 +259,27 @@ void add_edge( struct matrix * points,
 }
 
 /*======== void draw_lines() ==========
-Inputs:   struct matrix * points
-         screen s
-         color c 
-Returns: 
-Go through points 2 at a time and call draw_line to add that line
-to the screen
-====================*/
+  Inputs:   struct matrix * points
+  screen s
+  color c 
+  Returns: 
+  Go through points 2 at a time and call draw_line to add that line
+  to the screen
+  ====================*/
 void draw_lines( struct matrix * points, screen s, color c) {
 
- if ( points->lastcol < 2 ) {
-   printf("Need at least 2 points to draw a line!\n");
-   return;
- }
+  if ( points->lastcol < 2 ) {
+    printf("Need at least 2 points to draw a line!\n");
+    return;
+  }
  
- int point;
- for (point=0; point < points->lastcol-1; point+=2)
-   draw_line( points->m[0][point],
-	      points->m[1][point],
-	      points->m[0][point+1],
-	      points->m[1][point+1],
-	      s, c);	       
+  int point;
+  for (point=0; point < points->lastcol-1; point+=2)
+    draw_line( points->m[0][point],
+	       points->m[1][point],
+	       points->m[0][point+1],
+	       points->m[1][point+1],
+	       s, c);	       
 }// end draw_lines
 
 
@@ -315,7 +328,7 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
       plot( s, c, x1, y1 );
     } //end octant 1
 
-    //octant 8
+      //octant 8
     else {
       d = A - B/2;
       
@@ -352,7 +365,7 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
       plot( s, c, x1, y1 );
     } //end octant 2
 
-    //octant 7
+      //octant 7
     else {
       d = A/2 - B;
       
